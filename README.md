@@ -55,16 +55,126 @@
 * createForm方法，会导致全渲染性能低
 
   * form注入form （form model）
-
-  * getFieldDecorator注册，组件注册，受控
-
+* getFieldDecorator注册，组件注册，受控
   * setFieldValues
-
-  * getFieldValues
-
+* getFieldValues
   * validateFields
 
-    
+**手写弹框组件** （TODO）
+
+* 使用createPortal(jsx, dom)，实现跨dom层级
+* beforeUnmount销毁dom
+
+
+
+## 02 React全家桶 - redux 01
+
+**多箭头函数的理解**
+
+简单的话相当于一堆参数分开传，传参从fn(a,b,c) => fn(a)(b)(c)，工厂思想，最内层core函数拥有逐层封装的所有特性和上下文，对于fn(a,b,c)这种耦合性低，变与重新利用和扩展
+
+**compose函数**
+
+多函数组合执行，上一函数的执行结果返回给下一函数，可以用于实现`插件机制`
+
+compose = funcs => funcs.reduce((a, b) => (...args) => a(b(...args)))
+
+```javascript
+function compose (funcs=[]) {
+    // 返回一个tricky函数，传啥返回啥
+    if(funcs.length == 0) return arg => arg
+    // 只有一个不用处理
+    if(funcs.length == 1) return funcs[1]
+    return funcs.reduce((a, b) => (...args) => a(b(...args)))
+    // 列如：foo, bar, baz, tua reduce计算结果：
+    // 有些难以理解，多了一层包装函数 a(b(c())), a(fn(b(fn(c())))), fn毛都没干
+    // 包装函数作用：执行当前的函数，将结果传给下一个包装函数
+    // 所以结果是：最后一个函数接收初始参数并执行，结果传给包装函数做参数
+    // 包装函数执行下个函数，并将结果传递给下一个包装函数
+
+    function result(...arg) {
+       return 
+        (function (tuaRes) {
+            return (function (bazRes) {
+                return foo(bar(bazRes))
+            }) (baz(tuaRes))
+        }) (tua(arg))
+    }
+}
+```
+
+**Redux**
+
+* state：状态
+
+* reducer：可靠的修改state值，因为是纯函数
+
+* action：相当于调用reducer
+
+  为什么不直接调用方法呢？异步操作提高效率？所以同步的dispatch，state可能不可靠
+
+* subscribe：订阅store变化
+
+
+
+**Redux中间件机制**
+
+本质是劫持store的dispatch方法，添加一些effect，feature，多中间件使用compose的形式安装
+
+* appyMiddleWare([]) 插件安装工厂函数，接收插件列表，返回中间件安装函数install(接收createStore, reducer)
+
+* createStore, 执行安装函数 install(createStore)(reducer)
+
+* 开始安装
+
+  * 执行createStore得到store
+
+  * 执行中间件-工厂 middleware(getStore, dispatch)，（effect）得到真正的中间件
+
+    ！因为需要dispatch等context，来个工厂给提供这些
+
+    中间件的context有：`getStore，dispatch`（工厂参数），next下一个插件的dispatch
+
+  * compose所有中间件，得到新的dispatch
+
+    compose从后向前reduce middleware，执行后得到增强版本的dispatch传递给下一个middleware，最后得到一个最终版本的dispatch，像一个洋葱解构
+
+    执行时第一个middleware的dispatch先执行，然后脱壳调用第二个，第三个.....原始的dispatch
+
+    vue得封装逻辑类似：compilerWebVue => webVue => global vue => core vue...
+
+  * 返回store用composed dispatch代替原dispatch
+
+
+
+**常用中间件**
+
+* redux-thunk, payload可以为function
+* redux-logger, 打印log，带颜色
+* redux-promise, playload为promise，resovle之后再dispatch
+
+
+
+**TODO** - 手写redux
+
+* createStore(reducer)
+* dispatch
+* subscribe & unsubscribe
+* 中间件机制applyMiddleware
+  * thunk
+  * promise
+  * logger
+* combineReducers(作业 - 多哥)
+
+
+
+
+
+## 翻车
+
+* 使用jsx需要React 在scope中
+* （TODO）HOC的时候需要返回React.cloneElement(FCmp, controlled)而不是createElement（FComp）什么原因
+* 工厂函数，高阶函数为了传递context
 
 
 
