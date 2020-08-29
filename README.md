@@ -1,3 +1,75 @@
+# React workshop笔记
+
+> 本项目仅用作本人记录学习笔记，代码备份，严禁下载和转载
+
+## 01 组件化
+
+组件化技术通常使用context和HOC的方式
+
+**context**
+
+* 创建context
+
+  React.createContext
+
+* 使用context
+
+  * ctx.provider, ctx.consumer
+  * 类静态方法Class.contextType = context
+  * useContext (函数组件中)
+
+**HOC** high order component
+
+高阶组件，高阶函数，柯里化？，工厂函数？
+
+接收组件作为参数，对组件进行包裹为其添加新的特性，返回包装后的组件，可使用decorator写法
+
+
+
+**手写表单组件** （TODO）
+
+**antd4版本，需求：**
+
+* 实现form model，保存form的状态，注册/注销field，设置和获取field value，校验
+  * getFieldValues
+  * getFieldValue
+  * setFieldValues
+  * setFieldValue
+  * validateFields
+  * registerField
+  * unregisterField
+  * Form.
+* 实现form
+  * onreset
+  * 提交
+    * onfinished
+    * onfinishedFailed
+* field组件
+  * 向form注册 -- 利用context的注册函数，name+rules
+  * 将input改为受控组件
+
+
+
+**antd3版本，需求：（作业-贝宁，validate）**
+
+* createForm方法，会导致全渲染性能低
+
+  * form注入form （form model）
+
+  * getFieldDecorator注册，组件注册，受控
+
+  * setFieldValues
+
+  * getFieldValues
+
+  * validateFields
+
+    
+
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
