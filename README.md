@@ -28,6 +28,8 @@
 
 **手写表单组件** （TODO）
 
+子组件的收集，可控子组件，校验，取值/设值
+
 **antd4版本，需求：**
 
 * 实现form model，保存form的状态，注册/注销field，设置和获取field value，校验
@@ -44,7 +46,7 @@
   * 提交
     * onfinished
     * onfinishedFailed
-* field组件
+* field组件 -- state保存在field中，变化不会如antd3导致整个form重新渲染
   * 向form注册 -- 利用context的注册函数，name+rules
   * 将input改为受控组件
 
